@@ -10,15 +10,10 @@
 
 #define MANDELBROT_STEPS	50
 
-// C functions
-CGContextRef CreateCustomBitmapContext(int width, int height) ;
+// C function
 BOOL isInMandelbrotSet(float re, float im) ;
-void drawMandelbrot(void) ;
 
 @implementation MandelbrotView
-
-void *bitmapData = NULL ;
-CGContextRef bitmapContext = NULL ;
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -28,7 +23,7 @@ CGContextRef bitmapContext = NULL ;
 		NSDate *time = [NSDate date] ;
 		
 		// instantiate the bitmap context
-		bitmapContext = CreateCustomBitmapContext(480, 320) ;
+		bitmapContext = [self createCustomBitmapContextWithSize: CGSizeMake(480.0f, 320.0f)] ;
 		
 		NSLog(@"bitmap context creation duration = %f", [[NSDate date] timeIntervalSinceDate: time]) ;
 		
@@ -74,14 +69,14 @@ CGContextRef bitmapContext = NULL ;
 	NSLog(@"draw rect duration = %f", [[NSDate date] timeIntervalSinceDate: now]) ;
 }
 
-CGContextRef CreateCustomBitmapContext(int width, int height)
+- (CGContextRef)createCustomBitmapContextWithSize:(CGSize)size
 {
 	CGContextRef context = NULL ;
 	
-	int bitmapBytesPerRow = (width * 4) ;
+	int bitmapBytesPerRow = (size.width * 4) ;
 	bitmapBytesPerRow += (16 - bitmapBytesPerRow%16)%16 ;
 	
-	size_t bitmapByteCount = (bitmapBytesPerRow * height) ;
+	size_t bitmapByteCount = (bitmapBytesPerRow * size.height) ;
 	
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB() ;
 	
@@ -93,7 +88,7 @@ CGContextRef CreateCustomBitmapContext(int width, int height)
 		return NULL ;
     }
 	
-	context = CGBitmapContextCreate(bitmapData, width, height, 8, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast) ;
+	context = CGBitmapContextCreate(bitmapData, size.width, size.height, 8, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast) ;
 	
 	if (context == NULL)
 	{

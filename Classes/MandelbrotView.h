@@ -11,9 +11,11 @@
 
 @interface MandelbrotView : UIView
 {
-	
+	void *bitmapData ;
+	CGContextRef bitmapContext ;
 }
 
 - (void)drawMandelbrot:(CGPoint)center andZoom:(CGFloat)zoom ;
+- (CGContextRef)createCustomBitmapContextWithSize:(CGSize)size ;
 
 @end
