@@ -41,11 +41,14 @@ BOOL isInMandelbrotSet(float re, float im) ;
 
 - (void)dealloc
 {
-	// release the bitmap context
-	CGContextRelease(bitmapContext) ;
+	// get the bitmap data from the context
+	void *bitmapData = CGBitmapContextGetData(bitmapContext) ;
 	
 	// free the bitmap data
 	free(bitmapData) ;
+	
+	// release the bitmap context
+	CGContextRelease(bitmapContext) ;
 	
 	[super dealloc] ;
 }
@@ -80,7 +83,7 @@ BOOL isInMandelbrotSet(float re, float im) ;
 	
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB() ;
 	
-	bitmapData = malloc(bitmapByteCount) ;
+	void *bitmapData = malloc(bitmapByteCount) ;
 	
 	if (bitmapData == NULL)
 	{
@@ -92,7 +95,7 @@ BOOL isInMandelbrotSet(float re, float im) ;
 	
 	if (context == NULL)
 	{
-		free (bitmapData) ;
+		free(bitmapData) ;
 		bitmapData = NULL ;
 		fprintf (stderr, "Context not created!") ;
 		return NULL ;

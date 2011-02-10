@@ -11,7 +11,6 @@
 
 @interface MandelbrotView : UIView
 {
-	void *bitmapData ;
 	CGContextRef bitmapContext ;
 }
 
